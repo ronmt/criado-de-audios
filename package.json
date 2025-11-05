@@ -1,0 +1,26 @@
+{
+  "name": "manga-image-narrator",
+  "version": "1.0.0",
+  "description": "Narrador de imagens de mangá usando IA para análise visual e síntese de voz",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "narrate": "tsx src/cli.ts"
+  },
+  "keywords": ["manga", "narrator", "ai", "tts", "image-analysis"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "openai": "^4.67.3",
+    "dotenv": "^16.4.5",
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "typescript": "^5.6.3",
+    "tsx": "^4.19.2"
+  }
+}
