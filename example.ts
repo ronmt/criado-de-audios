@@ -1,46 +1,36 @@
 /**
  * Exemplo de uso programático do Manga Image Narrator
+ * Usando OCR e TTS open-source (sem APIs pagas)
  */
 
 import { MangaImageNarrator } from './src/MangaImageNarrator.js';
-import { config } from 'dotenv';
-
-// Carregar variáveis de ambiente
-config();
 
 async function main() {
-  const apiKey = process.env.OPENAI_API_KEY;
-
-  if (!apiKey) {
-    console.error('❌ Por favor, configure OPENAI_API_KEY no arquivo .env');
-    process.exit(1);
-  }
-
   // Criar instância do narrador
-  const narrator = new MangaImageNarrator(apiKey, './output');
+  const narrator = new MangaImageNarrator('./output');
 
-  // Exemplo 1: Narrar uma única imagem
-  console.log('\n=== Exemplo 1: Narração Simples ===\n');
+  // Exemplo 1: Narrar uma única imagem de mangá japonês
+  console.log('\n=== Exemplo 1: Narração de Mangá Japonês ===\n');
 
   try {
     const result = await narrator.narrateManga('./sua-imagem.jpg', {
-      voice: 'nova',
-      language: 'pt',
+      voice: 'ja-JP-NanamiNeural', // Voz japonesa
+      language: 'ja', // OCR para japonês
       detailLevel: 'normal',
-      includeVisualDescription: true,
+      includeDescription: true,
     });
 
     console.log('\n📊 Resultado:');
-    console.log('Texto da narração:', result.text.substring(0, 200) + '...');
-    console.log('Áudio salvo em:', result.audioPath);
-    console.log('Personagens identificados:', result.analysis.characters);
-    console.log('Total de diálogos:', result.analysis.dialogues.length);
+    console.log('Texto extraído:', result.analysis.extractedText.substring(0, 200) + '...');
+    console.log('Confiança do OCR:', result.analysis.confidence.toFixed(2) + '%');
+    console.log('Áudio/Texto salvo em:', result.audioPath);
+    console.log('Blocos de texto encontrados:', result.analysis.textBlocks.length);
   } catch (error) {
     console.error('❌ Erro:', error);
   }
 
-  // Exemplo 2: Narrar múltiplas páginas
-  console.log('\n\n=== Exemplo 2: Múltiplas Páginas ===\n');
+  // Exemplo 2: Narrar múltiplas páginas em português
+  console.log('\n\n=== Exemplo 2: Múltiplas Páginas (Português) ===\n');
 
   try {
     const results = await narrator.narrateMultiplePages(
@@ -50,32 +40,53 @@ async function main() {
         './pagina3.jpg',
       ],
       {
-        voice: 'onyx',
-        language: 'pt',
+        voice: 'pt-BR-FranciscaNeural', // Voz portuguesa brasileira
+        language: 'pt', // OCR para português
         detailLevel: 'detailed',
       }
     );
 
     console.log(`\n✅ ${results.length} páginas processadas com sucesso!`);
+
+    // Exibir estatísticas
+    const avgConfidence = results.reduce((acc, r) => acc + r.analysis.confidence, 0) / results.length;
+    console.log(`📊 Confiança média do OCR: ${avgConfidence.toFixed(2)}%`);
   } catch (error) {
     console.error('❌ Erro:', error);
   }
 
-  // Exemplo 3: Apenas análise sem áudio
-  console.log('\n\n=== Exemplo 3: Apenas Análise ===\n');
+  // Exemplo 3: Apenas extração de texto (sem áudio)
+  console.log('\n\n=== Exemplo 3: Apenas Extração de Texto ===\n');
 
   try {
-    const analysis = await narrator.analyzeImage('./sua-imagem.jpg', {
-      language: 'en',
-      detailLevel: 'brief',
-      includeVisualDescription: false, // Apenas diálogos
-    });
+    // Inicializar OCR para inglês
+    await narrator.initialize('eng');
 
-    console.log('Análise:', analysis);
+    const extraction = await narrator.extractText('./comic-page.jpg');
+
+    console.log('📝 Texto extraído:');
+    console.log(extraction.text);
+    console.log(`\n📊 Confiança: ${extraction.confidence.toFixed(2)}%`);
+    console.log(`🔤 Palavras encontradas: ${extraction.blocks.length}`);
+
+    // Mostrar primeiras palavras com suas posições
+    console.log('\n📍 Primeiras palavras e suas posições:');
+    extraction.blocks.slice(0, 5).forEach((block, i) => {
+      console.log(`  ${i + 1}. "${block.text}" em (${block.bbox.x0}, ${block.bbox.y0})`);
+    });
   } catch (error) {
     console.error('❌ Erro:', error);
   }
+
+  // Exemplo 4: Listar vozes disponíveis
+  console.log('\n\n=== Exemplo 4: Vozes Disponíveis ===\n');
+
+  await MangaImageNarrator.listAvailableVoices();
+
+  // Limpar recursos
+  await narrator.cleanup();
+  console.log('\n✅ Exemplos concluídos!');
 }
 
 // Executar exemplos
-main();
+main().catch(console.error);

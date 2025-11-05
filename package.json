@@ -1,22 +1,24 @@
 {
   "name": "manga-image-narrator",
   "version": "1.0.0",
-  "description": "Narrador de imagens de mangá usando IA para análise visual e síntese de voz",
+  "description": "Narrador de imagens de mangá usando OCR e TTS open-source",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
-    "narrate": "tsx src/cli.ts"
+    "narrate": "tsx src/cli.ts",
+    "install-tesseract": "echo 'Por favor instale o Tesseract: sudo apt-get install tesseract-ocr tesseract-ocr-jpn tesseract-ocr-por'"
   },
-  "keywords": ["manga", "narrator", "ai", "tts", "image-analysis"],
+  "keywords": ["manga", "narrator", "ocr", "tts", "tesseract", "edge-tts"],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "openai": "^4.67.3",
-    "dotenv": "^16.4.5",
-    "commander": "^12.1.0"
+    "commander": "^12.1.0",
+    "tesseract.js": "^5.1.1",
+    "sharp": "^0.33.5",
+    "edge-tts": "^1.0.3"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",

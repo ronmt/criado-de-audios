@@ -1,46 +1,48 @@
 # 📖 Manga Image Narrator
 
-Narrador inteligente de imagens de mangá usando IA. Analisa páginas de mangá, extrai diálogos e descrições visuais, e converte tudo em narração de áudio natural.
+Narrador **100% gratuito e open-source** de imagens de mangá. Extrai texto usando OCR (Tesseract.js) e converte em áudio natural usando edge-tts.
 
-## ✨ Funcionalidades
+**✨ Sem APIs pagas! Sem chaves de API! Totalmente gratuito!**
 
-- 🔍 **Análise Visual com IA**: Usa GPT-4 Vision para analisar imagens de mangá
-- 💬 **Extração de Diálogos**: Identifica e lê diálogos na ordem correta de leitura
-- 🎨 **Descrição de Cenas**: Descreve cenários, ações e expressões dos personagens
-- 🎙️ **Narração em Áudio**: Converte texto em áudio natural com múltiplas vozes
+## 🎯 Funcionalidades
+
+- 🔍 **OCR Gratuito**: Usa Tesseract.js para extrair texto de imagens
+- 💬 **Suporte Multi-idioma**: Japonês, Português, Inglês e mais
+- 🎙️ **TTS Gratuito**: Síntese de voz com edge-tts (vozes Microsoft)
+- 📊 **Análise de Layout**: Detecta e ordena blocos de texto corretamente
+- 🎨 **Pré-processamento**: Melhora a qualidade da imagem para melhor OCR
 - 📚 **Processamento em Lote**: Processa múltiplas páginas de uma vez
-- 🌍 **Multi-idioma**: Suporte para Português, Inglês e Japonês
+- 🌍 **100% Local**: OCR roda no navegador, TTS usa ferramentas gratuitas
 
 ## 🚀 Instalação
+
+### Pré-requisitos
+
+- Node.js 18+
+- Python 3.7+ (para edge-tts)
+
+### Instalação
 
 ```bash
 # Clone o repositório
 git clone <url-do-repositorio>
 cd criado-de-audios
 
-# Instale as dependências
+# Instale as dependências Node.js
 npm install
 
-# Configure a API Key da OpenAI
-cp .env.example .env
-# Edite o arquivo .env e adicione sua chave da API
+# Instale o edge-tts (TTS gratuito)
+pip install edge-tts
 ```
 
-## 🔑 Configuração
-
-1. Obtenha uma chave da API OpenAI em: https://platform.openai.com/api-keys
-2. Crie um arquivo `.env` na raiz do projeto:
-
-```env
-OPENAI_API_KEY=sk-sua-chave-aqui
-```
+**Pronto! Sem necessidade de chaves de API!** 🎉
 
 ## 📖 Uso
 
 ### Via CLI (Linha de Comando)
 
 ```bash
-# Narrar uma única imagem
+# Narrar uma única imagem de mangá
 npm run narrate -- imagem-manga.jpg
 
 # Narrar múltiplas páginas
@@ -48,168 +50,248 @@ npm run narrate -- pagina1.jpg pagina2.jpg pagina3.jpg
 
 # Opções avançadas
 npm run narrate -- imagem.jpg \
-  --voice nova \
-  --language pt \
+  --voice ja-JP-NanamiNeural \
+  --language ja \
   --detail detailed \
   --output ./minhas-narracoes
 ```
 
-### Opções da CLI
+### Comandos Disponíveis
 
-- `-v, --voice <voice>`: Voz para narração
-  - Opções: `alloy`, `echo`, `fable`, `onyx`, `nova`, `shimmer`
-  - Padrão: `nova`
+#### Narrar imagens
 
-- `-l, --language <lang>`: Idioma da narração
-  - Opções: `pt` (Português), `en` (Inglês), `ja` (Japonês)
-  - Padrão: `pt`
+```bash
+npm run narrate -- <imagens...> [opções]
+```
 
-- `-d, --detail <level>`: Nível de detalhe
-  - Opções: `brief` (breve), `normal`, `detailed` (detalhado)
-  - Padrão: `normal`
+**Opções:**
 
-- `--no-visual`: Narra apenas diálogos, sem descrição visual
+- `-v, --voice <voice>`: Voz para narração (padrão: `pt-BR-FranciscaNeural`)
+  - Exemplos: `pt-BR-FranciscaNeural`, `ja-JP-NanamiNeural`, `en-US-AriaNeural`
 
-- `-o, --output <dir>`: Diretório de saída
-  - Padrão: `./output`
+- `-l, --language <lang>`: Idioma do OCR (padrão: `ja`)
+  - Opções: `pt`, `en`, `ja`
 
-### Uso Programático (API)
+- `-d, --detail <level>`: Nível de detalhe (padrão: `normal`)
+  - Opções: `brief`, `normal`, `detailed`
+
+- `--no-description`: Não incluir descrição adicional
+
+- `-o, --output <dir>`: Diretório de saída (padrão: `./output`)
+
+#### Listar vozes disponíveis
+
+```bash
+npm run narrate -- voices
+```
+
+Lista todas as vozes disponíveis do edge-tts por idioma e região.
+
+#### Testar configuração
+
+```bash
+npm run narrate -- test
+```
+
+Verifica se o OCR e TTS estão funcionando corretamente.
+
+## 📚 Exemplos
+
+### Exemplo 1: Mangá Japonês
+
+```bash
+npm run narrate -- one-piece-page.jpg \
+  --voice ja-JP-NanamiNeural \
+  --language ja
+```
+
+### Exemplo 2: HQ em Português
+
+```bash
+npm run narrate -- turma-da-monica.jpg \
+  --voice pt-BR-FranciscaNeural \
+  --language pt \
+  --detail detailed
+```
+
+### Exemplo 3: Comic em Inglês
+
+```bash
+npm run narrate -- spiderman.jpg \
+  --voice en-US-AriaNeural \
+  --language en
+```
+
+### Exemplo 4: Múltiplas Páginas
+
+```bash
+npm run narrate -- capitulo1/*.jpg \
+  --voice ja-JP-NanamiNeural \
+  --language ja
+```
+
+## 🎤 Vozes Recomendadas
+
+### Português (Brasil)
+
+- `pt-BR-FranciscaNeural` - Feminina (padrão)
+- `pt-BR-AntonioNeural` - Masculina
+
+### Japonês
+
+- `ja-JP-NanamiNeural` - Feminina
+- `ja-JP-KeitaNeural` - Masculina
+
+### Inglês (EUA)
+
+- `en-US-AriaNeural` - Feminina
+- `en-US-GuyNeural` - Masculina
+
+Para ver todas as vozes disponíveis:
+
+```bash
+npm run narrate -- voices
+```
+
+## 💻 Uso Programático (API)
 
 ```typescript
 import { MangaImageNarrator } from 'manga-image-narrator';
 
 // Criar instância do narrador
-const narrator = new MangaImageNarrator(
-  process.env.OPENAI_API_KEY!,
-  './output'
-);
+const narrator = new MangaImageNarrator('./output');
 
 // Narrar uma única imagem
 const result = await narrator.narrateManga('manga-page.jpg', {
-  voice: 'nova',
-  language: 'pt',
-  detailLevel: 'detailed',
-  includeVisualDescription: true,
+  voice: 'ja-JP-NanamiNeural',
+  language: 'ja',
+  detailLevel: 'normal',
+  includeDescription: true,
 });
 
-console.log('Narração:', result.text);
+console.log('Texto extraído:', result.analysis.extractedText);
+console.log('Confiança OCR:', result.analysis.confidence);
 console.log('Áudio salvo em:', result.audioPath);
-console.log('Personagens:', result.analysis.characters);
 
-// Narrar múltiplas páginas
-const results = await narrator.narrateMultiplePages(
-  ['page1.jpg', 'page2.jpg', 'page3.jpg'],
-  { voice: 'nova', language: 'pt' }
-);
+// Limpar recursos quando terminar
+await narrator.cleanup();
+```
+
+### Apenas extração de texto (sem áudio)
+
+```typescript
+const narrator = new MangaImageNarrator('./output');
+await narrator.initialize('jpn'); // Inicializar OCR
+
+const extraction = await narrator.extractText('manga-page.jpg');
+
+console.log('Texto:', extraction.text);
+console.log('Confiança:', extraction.confidence);
+console.log('Blocos:', extraction.blocks.length);
+
+await narrator.cleanup();
 ```
 
 ## 📂 Estrutura de Saída
 
-O narrador cria os seguintes arquivos no diretório de saída:
-
 ```
 output/
-├── imagem-manga_narration.mp3    # Áudio da narração
-└── imagem-manga_analysis.txt     # Texto da análise
+├── imagem_narration.mp3        # Áudio da narração
+├── imagem_extracted.txt        # Texto extraído (bruto)
+└── temp_processed.png          # Imagem pré-processada (temporária)
 ```
 
-## 🎭 Vozes Disponíveis
+## 🛠️ Como Funciona
 
-- **alloy**: Voz neutra e balanceada
-- **echo**: Voz masculina, clara e profissional
-- **fable**: Voz britânica, expressiva
-- **onyx**: Voz masculina profunda
-- **nova**: Voz feminina (padrão, recomendada para narração)
-- **shimmer**: Voz feminina suave e calorosa
+1. **Pré-processamento**: A imagem é convertida para escala de cinza, normalizada e realçada usando Sharp
+2. **OCR**: Tesseract.js extrai o texto da imagem com suas posições
+3. **Ordenação**: Os blocos de texto são ordenados na ordem de leitura correta (direita→esquerda para mangá)
+4. **Narração**: O texto é formatado e convertido em áudio usando edge-tts
+5. **Saída**: Gera arquivos de áudio (.mp3) e texto (.txt)
 
-## 📋 Exemplos
+## 🔧 Tecnologias
 
-### Exemplo 1: Narração simples
-
-```bash
-npm run narrate -- ./exemplos/onepiece-page.jpg
-```
-
-**Saída:**
-```
-🔍 Analisando imagem do mangá...
-✅ Análise concluída!
-🎙️  Gerando narração em áudio...
-✅ Áudio salvo em: ./output/onepiece-page_narration.mp3
-📝 Análise salva em: ./output/onepiece-page_analysis.txt
-```
-
-### Exemplo 2: Múltiplas páginas com voz masculina
-
-```bash
-npm run narrate -- cap1/*.jpg --voice onyx --detail detailed
-```
-
-### Exemplo 3: Apenas diálogos (sem descrição visual)
-
-```bash
-npm run narrate -- manga.jpg --no-visual --language en
-```
-
-## 🧪 Testes
-
-```bash
-# Testar configuração da API
-npm run narrate -- test
-```
-
-## 🏗️ Desenvolvimento
-
-```bash
-# Compilar TypeScript
-npm run build
-
-# Executar em modo desenvolvimento
-npm run dev
-
-# Executar CLI em desenvolvimento
-npm run narrate -- sua-imagem.jpg
-```
-
-## 🛠️ Tecnologias
-
-- **OpenAI GPT-4 Vision**: Análise visual de imagens
-- **OpenAI TTS**: Síntese de voz natural
+- **Tesseract.js**: OCR JavaScript (roda no Node.js)
+- **Sharp**: Processamento de imagens
+- **edge-tts**: Síntese de voz gratuita (Microsoft Edge TTS)
 - **TypeScript**: Tipagem estática
 - **Commander.js**: Interface de linha de comando
 
-## 📝 Requisitos
+## 📊 Comparação com OpenAI
 
-- Node.js 18+
-- Chave da API OpenAI
-- Imagens nos formatos: JPG, PNG, WebP, GIF
+| Recurso | OpenAI (pago) | Este projeto (gratuito) |
+|---------|---------------|------------------------|
+| **Custo** | ~$0.01-0.03 por página | 💰 **100% Gratuito** |
+| **API Key** | Necessária | ❌ Não necessária |
+| **OCR** | GPT-4 Vision | Tesseract.js |
+| **TTS** | TTS-1 | edge-tts (Microsoft) |
+| **Qualidade OCR** | Alta | Boa (melhor com imagens de qualidade) |
+| **Qualidade TTS** | Excelente | Muito Boa |
+| **Offline** | ❌ Não | ✅ OCR local (TTS requer internet) |
+
+## 💡 Dicas para Melhor OCR
+
+1. **Use imagens de alta qualidade**: JPG/PNG com boa resolução
+2. **Texto claro**: Imagens com bom contraste funcionam melhor
+3. **Evite imagens muito comprimidas**: Artefatos de compressão prejudicam o OCR
+4. **Idioma correto**: Use `-l ja` para japonês, `-l pt` para português, etc.
+5. **Pré-processamento**: O sistema já faz automaticamente, mas você pode editar a função `preprocessImage()` para ajustar
+
+## 🐛 Troubleshooting
+
+### "edge-tts não encontrado"
+
+```bash
+# Instale o edge-tts
+pip install edge-tts
+
+# Ou com pip3
+pip3 install edge-tts
+```
+
+### OCR com baixa confiança
+
+- Verifique se a imagem tem boa qualidade
+- Use o idioma correto (`--language ja/pt/en`)
+- Tente pré-processar a imagem manualmente antes
+
+### "Worker não inicializado"
+
+Se usar programaticamente, chame `await narrator.initialize()` antes de usar.
+
+## 🗺️ Roadmap
+
+- [ ] Suporte para ordem de leitura LTR (comics ocidentais)
+- [ ] Detecção automática de idioma
+- [ ] Interface web
+- [ ] Suporte para PDF
+- [ ] Cache de análises
+- [ ] Combinação de áudios de múltiplas páginas
+- [ ] Detecção de balões de fala
+- [ ] Suporte para mais idiomas (coreano, chinês, etc.)
 
 ## 🤝 Contribuindo
 
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests.
+Contribuições são bem-vindas! Abra issues e pull requests.
 
 ## 📄 Licença
 
 MIT
-
-## 🎯 Roadmap
-
-- [ ] Suporte para PDF (múltiplas páginas)
-- [ ] Detecção automática de ordem de leitura (mangá vs comic ocidental)
-- [ ] Cache de análises para evitar reprocessamento
-- [ ] Interface web
-- [ ] Suporte para mais idiomas
-- [ ] Reconhecimento de personagens recorrentes
-- [ ] Efeitos sonoros automáticos
-- [ ] Música de fundo contextual
 
 ## 💡 Casos de Uso
 
 - **Acessibilidade**: Torne mangás acessíveis para pessoas com deficiência visual
 - **Aprendizado de Idiomas**: Ouça mangás em diferentes idiomas
 - **Audiobooks**: Converta suas coleções de mangá em audiobooks
-- **Análise de Conteúdo**: Extraia e analise diálogos e cenas automaticamente
+- **Extração de Dados**: Extraia texto de mangás para análise ou tradução
+- **Estudos**: Use para pesquisas sobre narrativa visual
+
+## 🙏 Agradecimentos
+
+- [Tesseract.js](https://github.com/naptha/tesseract.js) - OCR em JavaScript
+- [edge-tts](https://github.com/rany2/edge-tts) - TTS gratuito usando Microsoft Edge
+- [Sharp](https://github.com/lovell/sharp) - Processamento de imagens
 
 ---
 
-Feito com ❤️ usando IA
+**Feito com ❤️ sem gastar nada em APIs**
